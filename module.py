@@ -1,8 +1,5 @@
-import datetime
-import time
+import random
 
-now = datetime.datetime.now().isoformat()[20:]
-login = 'Login' + now
-print(login)
-time.sleep(2)
-print(login)
+x = [1, 2, 3]
+
+print(type(random.randint(1, 82)))
