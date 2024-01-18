@@ -66,7 +66,9 @@ try:
 
         el_to_be_clickable('.form__select-item:nth-child(2)>.v-list-item__content>.v-list-item-title')
         browser.find_element(
-            By.CSS_SELECTOR, '.form__select-item:nth-child(2)>.v-list-item__content>.v-list-item-title'
+            By.CSS_SELECTOR, '.form__select-item:nth-child({})>.v-list-item__content>.v-list-item-title'.format(
+                str(random.randint(1, 5))
+                )
             ).click()
 
         # Поле Фамилия
