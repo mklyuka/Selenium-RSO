@@ -1,5 +1,11 @@
-import random
-
-x = [1, 2, 3]
-
-print(type(random.randint(1, 82)))
+from datetime import datetime
+import time
+ 
+start_time = datetime.now()  # время начала выполнения
+ 
+time.sleep(3)
+ 
+end_time = datetime.now()  # время окончания выполнения
+execution_time = end_time - start_time  # вычисляем время выполнения
+ 
+print(f"Время выполнения программы: {execution_time} секунд")
