@@ -19,7 +19,7 @@ browser = webdriver.Chrome(options=chrome_options)
 
 # ожидание появления элемента в dom
 def el_to_be_in_dom(CSS_SELECTOR):
-    en_af = WebDriverWait(browser, 5, 0.5).until(
+    en_af = WebDriverWait(browser, 10, 0.5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, CSS_SELECTOR))
         )
 
@@ -129,7 +129,7 @@ else:
     en_lastname = w_lastname[lastname]
 
 try:
-    link = 'https://rso.sprint.1t.ru/'
+    link = 'https://xn--j1ab.xn--d1amqcgedd.xn--p1ai/'
     browser.get(link)
 
     # Клик по кнопке "Зарегистрироваться"
@@ -198,9 +198,9 @@ try:
         browser.find_element(By.CSS_SELECTOR, ".login_btn>span").click()
     log_in()
 
-    time.sleep(3)
 # загрузить аватар
     def upload_av():
+        el_to_be_clicable('.user-metric__avatar-wrapper>.user-metric__avatar-add')
         browser.find_element(By.CSS_SELECTOR, '.user-metric__avatar-wrapper>.user-metric__avatar-add').click()
         el_to_be_clicable('.v-overlay__content>div>.v-card-text')
         browser.find_element(By.CSS_SELECTOR, '.v-overlay__content>div>.v-card-text').click()
@@ -214,7 +214,8 @@ try:
         not_presence_el_loc(".v-card-actions>[type='submit']")
 
         # обновить страницу
-        browser.get('https://rso.sprint.1t.ru/PersonalData')
+        cur_link = browser.current_url
+        browser.get(cur_link)
 
     upload_av()
 
@@ -234,14 +235,17 @@ try:
         not_presence_el_loc(".v-card-actions>[type='submit']")
         
         # Обновить страницу
-        browser.get('https://rso.sprint.1t.ru/PersonalData')    
+        cur_link = browser.current_url
+        browser.get(cur_link) 
     
     upload_back()
 
-# заполнение персональных данных
+# переход на страницу персональных данных
     def user_data():
-        scroll_by_css(".contributorBtn:nth-child(2)")
-        # переход на страницу персональных данных
+        scroll_by_css('[name="verify-btn"]')
+        browser.find_element(By.CSS_SELECTOR, '[name="verify-btn"]').click()
+
+        el_to_be_clicable(".contributorBtn:nth-child(2)")
         browser.find_element(By.CSS_SELECTOR, ".contributorBtn:nth-child(2)").click()
 
     user_data()
@@ -251,11 +255,10 @@ try:
         scroll_by_css('.v-expansion-panel:nth-child(1) .v-expansion-panel-title__icon')
         browser.find_element(By.CSS_SELECTOR, '.v-expansion-panel:nth-child(1) .v-expansion-panel-title__icon').click()
 
-        time.sleep(3)
-
+        # Чек-бокс пол
         if gender == 'm':
-            el_to_be_clicable('.checkbox>[for="m1"]')
-            browser.find_element(By.CSS_SELECTOR, '.checkbox>[for="m1"]').click()
+            el_to_be_clicable('.checkbox #m1')
+            browser.find_element(By.CSS_SELECTOR, '.checkbox #m1').click()
 
         el_to_be_clicable('.form-field:nth-child(2)>.form-input>input')
         browser.find_element(
@@ -291,17 +294,19 @@ try:
             By.CSS_SELECTOR, '.none>.form-field:nth-child(4) .v-field__input'
             ).click()
         
+        
+
         selector = '.form__select-item:nth-child({})>.v-list-item__content>.v-list-item-title'.format(str(random.randint(1, 6)))
-        el_to_be_clicable(selector)
+        el_to_be_in_dom(selector)
         browser.find_element(By.CSS_SELECTOR, selector).click()
 
         # Выбор населенного пункта
         region = browser.find_element(By.CSS_SELECTOR, '.v-select__selection>span')
-        cityes = {'Амурская область': 'Благовещенск',
-                  'Еврейская автономная область': 'Биробиджан',
-                  'Забайкальский край': 'Чита',
+        cityes = {'Костромская область': 'Кострома',
+                  'Омская область': 'Омск',
+                  'Нижегородская область': 'Нижний Новгород',
                   'Камчатский край': 'Петропавловск-Камчатский',
-                  'Магаданская область': 'Магадан',
+                  'Удмуртская Республика': 'Ижевск',
                   'Приморский край': 'Владивосток'}
         city = cityes[region.text]
 
@@ -317,10 +322,8 @@ try:
             ).send_keys('ул. Ленина, д. 42, кв. 56')
         
         # Чек-бокс
-        el_to_be_clicable('.checkbox>[for="Да"]')
-        browser.find_element(By.CSS_SELECTOR, '.checkbox>[for="Да"]').click()
-
-        time.sleep(3)
+        el_to_be_clicable('.checkbox #Да')
+        browser.find_element(By.CSS_SELECTOR, '.checkbox #Да').click()
 
         scroll_by_css('.none>.form-field:nth-child(4)')
         browser.find_element(By.CSS_SELECTOR, '.nav-btn__wrapper>[label="Далее"]').click()
@@ -329,12 +332,13 @@ try:
 
     city = addres_data()
 
+    # Информация о документах
     def docs_data():
-        scroll_by_css('[for="Да"]')
+        scroll_by_css('.checkbox #Да')
 
         # чек-бокс
-        el_to_be_clicable('.one>.checkbox:nth-child(2)')
-        browser.find_element(By.CSS_SELECTOR, '.one>.checkbox:nth-child(2)').click()
+        el_to_be_clicable('[placeholder="Название организации"]')
+        browser.find_element(By.CSS_SELECTOR, '.checkbox #Да').click()
 
         # номер и серия
         el_to_be_clicable('[id="pass-num "]')
@@ -344,7 +348,7 @@ try:
         
         # Дата выдачи
         x = int(birthday.split('.')[2]) + 14
-        pass_date = x[:6] + str(x)
+        pass_date = birthday[:6] + str(x)
 
         el_to_be_clicable('#pass_date')
         browser.find_element(
@@ -357,7 +361,49 @@ try:
             By.CSS_SELECTOR, '#pass-id'
             ).send_keys('Центральным отделением ОУФМС города {}'.format(city))
         
+        # СНИЛС
+        el_to_be_clicable('#SNILS-d')
+        browser.find_element(
+            By.CSS_SELECTOR, '#SNILS-d'
+            ).send_keys(random.randint(10000000000, 99999999999))
+        
+        # ИНН
+        el_to_be_clicable('#INN-id')
+        browser.find_element(
+            By.CSS_SELECTOR, '#INN-id'
+            ).send_keys(random.randint(100000000000, 999999999999))
+        
+        # Трудовая книжка
+        el_to_be_clicable('#work_book')
+        browser.find_element(
+            By.CSS_SELECTOR, '#work_book'
+            ).send_keys('ТК ' + str(random.randint(1000000, 9999999)))
+
+        # Загран паспорт
+        el_to_be_clicable('#foreign-pass')
+        browser.find_element(
+            By.CSS_SELECTOR, '#foreign-pass'
+            ).send_keys('ТК ' + str(random.randint(1000000, 9999999)))
+        
+        # Клик по кнопке далее
+        browser.find_element(By.CSS_SELECTOR, '.nav-btn__wrapper>[label="Далее"]').click()
+        
     docs_data()
+
+    # Образовательная информация
+    def education_data():
+
+        # Образовательная информация из выпадающего списка
+        el_to_be_in_dom('.v-input__control')
+        browser.find_element(
+            By.CSS_SELECTOR, '.v-field__input'
+            ).click()
+
+        selector = '.form__select-item:nth-child({})>.v-list-item__content>.v-list-item-title'.format(str(random.randint(1, 6)))
+        time.sleep(10)
+        browser.find_element(By.CSS_SELECTOR, selector).click()
+    
+    education_data()
 
 
 
@@ -391,6 +437,8 @@ end_time = float(time.monotonic())
 print('\n' + str((end_time - start_time) / 60))
 
 '''
+!!! Попробовать метод actions !!!
+
 1. Сделать рандомный выбор региона
 4. Посмотреть -- что там еще можно редактировать
 5. Написать коротко о себе

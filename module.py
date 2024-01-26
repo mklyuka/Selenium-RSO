@@ -1,6 +1,6 @@
-x = '01.01.2001'
-y = int(x.split('.')[2]) + 14
-z = x[:6] + str(y)
-print(
-    z
-)
+fio = ['Ivanov Egor Ivanovich', 'Pertov Inokentii Petrovich', 'Vasilev Viacheslav Vasilevich']
+
+for i in fio:
+    print(
+        fio[0].split(' ')[1]
+        )
